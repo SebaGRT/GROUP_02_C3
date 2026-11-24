@@ -1,0 +1,13 @@
+# Office lock files
+.~lock.*#
+~$*
+# Python caches and build scratch
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+presentation/_render/
+# Data files are never committed (C3 no-data policy)
+*.csv
+*.csv.gz
+*.parquet
+*.xlsx
