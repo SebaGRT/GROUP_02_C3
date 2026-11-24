@@ -2,7 +2,7 @@
 
 **Course:** Business Intelligence · IIB423T-1 (Universidad del Desarrollo)  
 **Instructor:** Tomás Fontecilla  
-**Assessed Version:** `v1.0 — Final C3 Submission`  
+**Assessed Version:** `v1.0 — Final C3 Submission` (git tag [`v1.0-c3`](https://github.com/SebaGRT/GROUP_02_C3/tree/v1.0-c3) on `main`)  
 **Team:** Group 02 — **Benjamín Pinto** & **Sebastián Herrera**
 
 ---
@@ -38,6 +38,19 @@
 
 ---
 
+### Traceability of Presentation Charts
+
+| Slide(s) | What is shown | Source of the values |
+|---|---|---|
+| 3 (Part 1) | Publication-lag view | `figures/view1_after_publication_lag.png` ← NB03 §2, data from NB01 §3 probe |
+| 4 (Part 1) | Average miss: 51.32 / 36.17 / 30.57 and live range 30.57–36.17 | Drawn in `presentation/build_presentations.py` from NB02 §2 benchmark table |
+| 5 (Part 1) | National 2024 forecast | `figures/view2_after_national_forecast.png` ← NB03 §3, NB02 §4 Table 2B |
+| 6 (Part 1) | MAE by care setting | `figures/view3_after_care_setting_mae.png` ← NB03 §4, NB02 §4 Table 2A |
+| 11 (Part 2) | 7 of the 14 benchmarked models, gains −10.81 / −5.60 | Drawn in `presentation/build_presentations.py` from NB02 §2 benchmark table |
+| 13 (Part 2) | `SERIES_STYLE` table and grayscale before/after | `src/visual_system.py`, NB03 §1 |
+
+---
+
 ## 3. Data Provenance & No-Data-Files Policy
 
 Per C3 rubric policy, **no raw datasets, curated datasets, or CSV data extracts are included in this repository**. All results are preserved via compact summary tables and embedded figures inside the executed notebooks.
@@ -59,6 +72,7 @@ Per C3 rubric policy, **no raw datasets, curated datasets, or CSV data extracts 
 | **C2** | Pandemic years (`2020–2021`) distort post-pandemic respiratory levels; keep evaluation leak-free. | Selected **post-pandemic training window (`2022-only`)** on Validation 2023 (`MAE 47.45` vs. `48.49`; `Bias -2.46%` vs. `-7.13%`), froze spec, refitted on `2022–2023` (`62,635` rows), and scored Test 2024 (`31,121` rows) once (`MAE 46.98` vs. `51.32`). |
 | **C2 Feedback** | Test additional model families (**SARIMA** and **XGBoost**) and explore **nowcasting** to recover the DEIS lag penalty. | Benchmarked **14 models** on the exact same chronological split (NB02 §4–§5): Top-Down SARIMAX+Fourier (`48.29`), Lag-Safe XGBoost (`36.17`, `0-wk` peak lag), and **XGBoost Poisson + Simulated Monday Chain-Ladder Nowcast (`30.57`, `-40.4%`)**, clearly separating XGBoost's gain from simulated nowcasting's gain. |
 | **W3 → C3** | Unify separate charts into one colorblind-safe visual system with transparent caveats; avoid overstating simulated nowcast or unproven causal causes of the Oct overshoot. | Implemented [`src/visual_system.py`](src/visual_system.py) with 5-role semantic palette, non-color redundancy (`X`, `D`, `o`, `s`, `^`, hatching), uniform frameless top-bar legends across all 3 views, neutral slate vs. red residual shading, factual `6 Oct` overshoot label (`+28.4k`), and explicit May plateau (`182.0k` vs. `183.7k`) & Wednesday-to-Monday probe re-mapping notes (NB03). |
+| **W3 design selection** | Two W3 versions existed: v1 (views built on the C2 Poisson GLM) and v2 (same visual system, views built on the final XGBoost + simulated nowcast model). | C3 uses the **v2 views**, because C3 assesses the final study and its displayed values must match the final model (NB02 §2–§4). The design rules were kept; the only design change after W3 is the `SERIES_STYLE` fix below. |
 | **W3 Feedback (C, −7.5)** | System explicit, but in View 2 *Observed* and *Model* shared a solid line and a filled circle, weakening non-color redundancy despite labels. Suggestion: use different line types (solid vs. dotted). | Added a shared `SERIES_STYLE` role table and helpers (`series_line`, `series_marker`, `series_handle`) to [`src/visual_system.py`](src/visual_system.py): **Observed = solid + `●`**, **Model = dotted + `◆`**, **Baseline = dashed + `□`**. View 2 uses these roles in both panels, at the peak markers, in the legend and in the direct end labels. View 3 reuses the model diamond so Views 2–3 share one series encoding. Rule table and fix note are in NB03 §1 and §3; figures were regenerated in `figures/`. |
 
 ---
